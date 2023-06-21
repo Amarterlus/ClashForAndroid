@@ -28,13 +28,17 @@ subprojects {
     }
 
     val isApp = name == "app"
-
+    val moduleName = name
     apply(plugin = if (isApp) "com.android.application" else "com.android.library")
 
     extensions.configure<BaseExtension> {
         defaultConfig {
             if (isApp) {
                 applicationId = "com.github.kr328.clash"
+                namespace = "com.github.kr328.clash"
+            } else {
+//                println("sub======================>com.github.kr328.clash.$moduleName")
+                namespace = "com.github.kr328.clash.$moduleName"
             }
 
             minSdk = 21
@@ -75,7 +79,7 @@ subprojects {
             flavorDimensions("feature")
 
             create("foss") {
-                isDefault = true
+//                isDefault = true
                 dimension = flavorDimensionList[0]
                 versionNameSuffix = ".foss"
 
@@ -86,8 +90,11 @@ subprojects {
                 }
             }
             create("premium") {
+                isDefault = true
                 dimension = flavorDimensionList[0]
-                versionNameSuffix = ".premium"
+                if (isApp) {
+                    versionNameSuffix = ".premium"
+                }
 
                 buildConfigField("boolean", "PREMIUM", "Boolean.parseBoolean(\"true\")")
             }
@@ -128,6 +135,8 @@ subprojects {
             dataBinding {
                 isEnabled = name != "hideapi"
             }
+
+            buildConfig = true
         }
 
         variantFilter {
@@ -145,6 +154,11 @@ subprojects {
                 }
             }
         }
+
+        /*compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
+        }*/
     }
 }
 

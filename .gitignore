@@ -61,3 +61,5 @@ google-services.json
 
 # MacOS
 .DS_Store
+
+*.backup
